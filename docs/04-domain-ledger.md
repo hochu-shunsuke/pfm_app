@@ -17,7 +17,8 @@ JournalLine (仕訳明細: 借方 or 貸方の1行)
   - journal_entry_id
   - account_id
   - side      : debit / credit （借方 / 貸方）
-  - amount    : 金額（型は未決: integer(銭) 推奨。下記参照）
+  - amount    : 金額。**integerで「1/100円単位（×100）」保存**（決定済）。floatは丸め誤差で禁忌。
+                入出力で必ず ×100/÷100 を一貫適用。精度変更時は UPDATE で一括データマイグレーション。
 ```
 
 ## 守るべき不変条件（invariant）
@@ -38,3 +39,14 @@ JournalLine (仕訳明細: 借方 or 貸方の1行)
 - `side`(debit/credit) を enum 文字列で持つか、符号付き amount 1列で持つか。
 
 > これらは「正解を写す」のでなく、自分で選んで notes に理由を残すのが目的。
+
+## 学び：アプリ層 validation と DB層 constraint の違い（iter-00で実機確認）
+| | アプリ層(validates) | DB層(null:false等) |
+|---|---|---|
+| 動く場所 | Ruby側、SQL発行**前** | DBエンジン内部、保存の**最後の砦** |
+| 反応 | `valid? false` ＋ 優しいエラー文言。例外は出さない | **例外**(ConstraintException)を投げる |
+| 迂回 | `save(validate: false)` で飛ばせる | 飛ばせない。生SQLでも効く |
+| 弱点 | 競合(TOCTOU)に弱い・スキップ可 | 文言が技術的でUIに出せない |
+
+**結論=多層防御（冗長ではない）**: アプリ層=UXの番人（分かりやすく弾く）、DB層=整合性の最終保証（何が来ても不変条件を絶対崩させない）。両方で「使いやすく、かつ壊れない」。
+→ 貸借一致(Σ借方==Σ貸方)も同じ思想で守りたいが、これは**複数レコードをまたぐ制約**でDBのcheck制約だけでは書きにくい。守り方が次の設計課題。
