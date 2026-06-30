@@ -53,6 +53,23 @@ RSpec.describe "Accounts", type: :request do
     expect(cash_json["balance"]).to eq(50000) # 借方50000 - 貸方0
   end
 
+  it "勘定種類に応じて残高の符号を補正する(資産は借方+, 収益は貸方+)" do
+    post session_path, params: { email_address: user_a.email_address, password: "pw12345" }
+
+    cash  = org_a.accounts.find_by(name: "現金A")
+    sales = org_a.accounts.create!(name: "売上", category: "revenue")
+    entry = org_a.journal_entries.build(date: Date.today, description: "売上")
+    entry.journal_lines.build(account: cash,  side: "debit",  amount: 80000)
+    entry.journal_lines.build(account: sales, side: "credit", amount: 80000)
+    entry.save!
+
+    get accounts_path
+    cash_json  = response.parsed_body.find { |a| a["name"] == "現金A" }
+    sales_json = response.parsed_body.find { |a| a["name"] == "売上" }
+    expect(cash_json["balance"]).to eq(80000)  # 資産: 借方80000 → +80000
+    expect(sales_json["balance"]).to eq(80000) # 収益: 貸方80000 → +80000(符号反転)
+  end
+
   describe "POST /accounts" do
     before do
       # 各テストの前にログインしておく

@@ -36,7 +36,7 @@ DB構成: dev/test=ローカルDocker(`compose.yaml`, user=pfm/pass=pfm_password
 | 3-2 | 残高ダッシュボード(口座一覧＋balance)。API GET /accountsにbalance付与、画面に¥表示 | ✅完了 |
 | 3-3 | 仕訳入力フォーム(行を動的増減＋クライアント側貸借チェック→POST /journal_entries) | ✅完了 |
 
-未対応メモ: 収益/負債の残高符号(category別の反転)。N+1(balanceが口座ごと2クエリ)。
+対応済: ✅収益/負債の残高符号(category別の反転, Account#debit_normal?)。✅N+1解消(Account.balances_forで1クエリ集計)。学びは docs/notes/learnings.md。
 | 3-4 | 仕上げ: ログアウト導線/ルートリダイレクト/戻る導線。ローディング・エラーは各画面に実装済 | ✅完了 |
 
 構成: pfm_app/直下=Rails(:3000)、pfm_app/frontend/=Next(:3001)。認証は同一サイトcookie。

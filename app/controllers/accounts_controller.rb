@@ -4,7 +4,8 @@ class AccountsController < ApiController
   # Account.all と書くと全組織が混ざる＝情報漏洩。必ず組織経由で辿る（認可境界）。
   def index
     accounts = Current.user.organization.accounts.order(:id)
-    render json: accounts.map { |account| account_json(account) }
+    balances = Account.balances_for(accounts) # 全口座の残高を1クエリでまとめて算出(N+1回避)
+    render json: accounts.map { |account| account_json(account, balances[account.id] || 0) }
   end
 
   # POST /accounts
@@ -28,8 +29,8 @@ class AccountsController < ApiController
   end
 
   # レスポンス整形。必要な項目だけ返し、残高(balance: 1/100円単位の整数)を加える。
-  # 注: balanceは1件ごとに2クエリ走るためN+1。口座数が増えたら集計の最適化余地あり。
-  def account_json(account)
-    account.as_json(only: [:id, :name, :category]).merge(balance: account.balance)
+  # balanceは呼び出し側でバッチ算出した値を受け取る(N+1回避)。
+  def account_json(account, balance)
+    account.as_json(only: [:id, :name, :category]).merge(balance: balance)
   end
 end
