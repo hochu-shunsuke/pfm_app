@@ -38,6 +38,21 @@ RSpec.describe "Accounts", type: :request do
     expect(names).not_to include("現金B")   # ★他組織は見えない＝認可境界が効いている
   end
 
+  it "各口座に残高(balance)を含めて返す" do
+    post session_path, params: { email_address: user_a.email_address, password: "pw12345" }
+
+    cash  = org_a.accounts.find_by(name: "現金A")
+    sales = org_a.accounts.create!(name: "売上", category: "revenue")
+    entry = org_a.journal_entries.build(date: Date.today, description: "入金")
+    entry.journal_lines.build(account: cash,  side: "debit",  amount: 50000)
+    entry.journal_lines.build(account: sales, side: "credit", amount: 50000)
+    entry.save!
+
+    get accounts_path
+    cash_json = response.parsed_body.find { |a| a["name"] == "現金A" }
+    expect(cash_json["balance"]).to eq(50000) # 借方50000 - 貸方0
+  end
+
   describe "POST /accounts" do
     before do
       # 各テストの前にログインしておく

@@ -8,8 +8,13 @@ type Account = {
   id: number;
   name: string;
   category: string;
-  organization_id: number;
+  balance: number; // 1/100円単位の整数（API側の保存形式）
 };
+
+// 1/100円単位の整数を「¥1,234」表示に整形
+function formatYen(amountInHundredths: number): string {
+  return `¥${(amountInHundredths / 100).toLocaleString("ja-JP")}`;
+}
 
 export default function AccountsPage() {
   const router = useRouter();
@@ -39,9 +44,12 @@ export default function AccountsPage() {
       <h1 className="mb-6 text-2xl font-bold">勘定科目</h1>
       <ul className="divide-y rounded border">
         {accounts.map((a) => (
-          <li key={a.id} className="flex justify-between px-4 py-3">
-            <span>{a.name}</span>
-            <span className="text-sm text-zinc-500">{a.category}</span>
+          <li key={a.id} className="flex items-center justify-between px-4 py-3">
+            <div className="flex flex-col">
+              <span>{a.name}</span>
+              <span className="text-xs text-zinc-500">{a.category}</span>
+            </div>
+            <span className="font-mono tabular-nums">{formatYen(a.balance)}</span>
           </li>
         ))}
         {accounts.length === 0 && (
