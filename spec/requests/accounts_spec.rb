@@ -20,9 +20,10 @@ RSpec.describe "Accounts", type: :request do
     org_b.accounts.create!(name: "現金B", category: "asset")
   end
 
-  it "未ログインだとログイン画面にリダイレクトされる" do
+  it "未ログインだと401 JSONを返す" do
     get accounts_path
-    expect(response).to redirect_to(new_session_path)
+    expect(response).to have_http_status(:unauthorized)
+    expect(response.parsed_body["error"]).to be_present
   end
 
   it "ログインすると自組織の口座だけがJSONで返る（他組織は混ざらない）" do

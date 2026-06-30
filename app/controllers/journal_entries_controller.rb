@@ -1,4 +1,4 @@
-class JournalEntriesController < ApplicationController
+class JournalEntriesController < ApiController
   # POST /journal_entries
   # 仕訳ヘッダ(date/description)＋複数の明細行(lines)を一括で受け取り作成する。
   def create
