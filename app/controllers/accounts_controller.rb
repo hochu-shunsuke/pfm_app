@@ -6,4 +6,24 @@ class AccountsController < ApplicationController
     accounts = Current.user.organization.accounts
     render json: accounts
   end
+
+  # POST /accounts
+  # 組織はログインユーザーから導出して .accounts.new する。
+  # クライアントから organization_id を受け取らない＝他組織への作成を防ぐ。
+  def create
+    account = Current.user.organization.accounts.new(account_params)
+    if account.save
+      render json: account, status: :created
+    else
+      render json: { errors: account.errors.full_messages }, status: :unprocessable_content
+    end
+  end
+
+  private
+
+  # strong parameters: 受け取って良いキーだけ許可。
+  # name/category のみ許可し、organization_id は意図的に除外（セッションから導出するため）。
+  def account_params
+    params.require(:account).permit(:name, :category)
+  end
 end

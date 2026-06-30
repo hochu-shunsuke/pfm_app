@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
-  resources :accounts, only: [:index]
+  resources :accounts, only: [:index, :create]
   root "accounts#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
