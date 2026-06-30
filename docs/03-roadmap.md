@@ -33,8 +33,10 @@ DB構成: dev/test=ローカルDocker(`compose.yaml`, user=pfm/pass=pfm_password
 |---|---|---|
 | 3-1a | Next生成(frontend/, Next16/TS/App Router/Tailwind)＋CORS＋ポート3001＋API URL。疎通確認済 | ✅完了 |
 | 3-1b | ログインフォーム(POST /session,JSON)＋cookie認証で口座一覧取得。Rails側SPA対応(JSONログイン/CSRFスキップ)済 | ✅完了 |
-| 3-2 | 残高ダッシュボード(口座一覧＋balance)。※balanceはまだAPI未公開→/accountsにbalance追加が必要 | 一部(一覧のみ) |
-| 3-3 | 仕訳入力フォーム(行を動的増減＋クライアント側貸借チェック) | 未 |
+| 3-2 | 残高ダッシュボード(口座一覧＋balance)。API GET /accountsにbalance付与、画面に¥表示 | ✅完了 |
+| 3-3 | 仕訳入力フォーム(行を動的増減＋クライアント側貸借チェック) | 🔵進行中 |
+
+未対応メモ: 収益/負債の残高符号(category別の反転)。N+1(balanceが口座ごと2クエリ)。
 | 3-4 | ローディング/エラー処理 | 未 |
 
 構成: pfm_app/直下=Rails(:3000)、pfm_app/frontend/=Next(:3001)。認証は同一サイトcookie。
