@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { apiFetch } from "@/lib/api";
 
 type Account = { id: number; name: string; category: string };
@@ -81,7 +82,10 @@ export default function NewJournalEntryPage() {
 
   return (
     <main className="mx-auto max-w-2xl p-8">
-      <h1 className="mb-6 text-2xl font-bold">仕訳の入力</h1>
+      <Link href="/accounts" className="text-sm text-blue-600 hover:underline">
+        ← 口座一覧へ戻る
+      </Link>
+      <h1 className="mt-2 mb-6 text-2xl font-bold">仕訳の入力</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <div className="flex gap-4">

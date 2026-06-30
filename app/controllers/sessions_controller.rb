@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
   allow_unauthenticated_access only: %i[ new create ]
-  skip_forgery_protection only: :create # SPA(Next)からのJSONログイン用
+  skip_forgery_protection only: %i[ create destroy ] # SPA(Next)からのJSONログイン/ログアウト用
   rate_limit to: 10, within: 3.minutes, only: :create, with: -> { redirect_to new_session_path, alert: "Try again later." }
 
   def new
@@ -23,6 +23,9 @@ class SessionsController < ApplicationController
 
   def destroy
     terminate_session
-    redirect_to new_session_path, status: :see_other
+    respond_to do |format|
+      format.html { redirect_to new_session_path, status: :see_other }
+      format.json { render json: { ok: true } }
+    end
   end
 end

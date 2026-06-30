@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiFetch } from "@/lib/api";
+import LogoutButton from "@/components/LogoutButton";
 
 type Account = {
   id: number;
@@ -44,12 +45,15 @@ export default function AccountsPage() {
     <main className="mx-auto max-w-2xl p-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">勘定科目</h1>
-        <Link
-          href="/journal_entries/new"
-          className="rounded bg-black px-3 py-2 text-sm text-white"
-        >
-          ＋ 仕訳を入力
-        </Link>
+        <div className="flex items-center gap-4">
+          <LogoutButton />
+          <Link
+            href="/journal_entries/new"
+            className="rounded bg-black px-3 py-2 text-sm text-white"
+          >
+            ＋ 仕訳を入力
+          </Link>
+        </div>
       </div>
       <ul className="divide-y rounded border">
         {accounts.map((a) => (
