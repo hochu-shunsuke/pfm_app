@@ -19,6 +19,6 @@
 | マネーフォワード | 会計/PFM/Fintech | Rails → Go/Kotlinでマイクロサービス、React+TS、MySQL(Aurora)、AWS/EKS |
 | SmartHR | 労務/HR SaaS | Rails(Rails Way忠実)、React+TS+Next.js、REST/GraphQL、テスト文化が濃い |
 | GA technologies | 不動産Tech | Rails+Go+TS、React/Vue、RAG付きLLM、Terraform/Datadog |
-| 楽天銀行/Fintech | 銀行/決済 | Java/Spring, Go, Python、マイクロサービス、コンテナ |
+| 楽天（銀行事業部）/Fintech | 銀行/決済 | Java/Spring, Go, Python、マイクロサービス、コンテナ |
 
 ※ 作者のGA枠は**データ/RAGでなくWebエンジニア**寄り。よってWeb開発(Rails+Next.js)が主役、Go/RAGはおまけ。
