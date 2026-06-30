@@ -1,4 +1,8 @@
 class ApiController < ApplicationController
+  # JSON APIはCORS許可リスト＋SameSite cookieで保護するため、
+  # フォーム用のCSRFトークン検証はスキップする。
+  skip_forgery_protection
+
   private
 
   # Authentication concern の request_authentication を上書き。
