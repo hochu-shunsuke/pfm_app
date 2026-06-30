@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   resources :accounts, only: [:index, :create]
+  resources :journal_entries, only: [:create]
   root "accounts#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
