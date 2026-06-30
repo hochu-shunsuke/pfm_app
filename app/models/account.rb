@@ -1,4 +1,6 @@
 class Account < ApplicationRecord
+    belongs_to :organization
+    
     CATEGORIES = %w[asset liability equity revenue expense].freeze
     
     has_many :journal_lines

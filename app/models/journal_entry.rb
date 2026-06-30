@@ -1,4 +1,6 @@
 class JournalEntry < ApplicationRecord
+    belongs_to :organization
+    
     has_many :journal_lines, dependent: :destroy
 
     validate :debit_credit_must_balance
